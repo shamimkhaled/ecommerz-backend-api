@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Add some basic styling */
+        .form-container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        #card-element {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        #submit {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #submit:hover {
+            background-color: #0056b3;
+        }
+        #card-errors {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form id="payment-form">
+            <div id="card-element">
+                <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <button id="submit">Pay</button>
+            <div id="card-errors" role="alert"></div>
+        </form>
+    </div>
+
+    <script>
+        // Set your publishable key
+        var stripe = Stripe('pk_test_51PKZydBuT9lXsa9qV3RsWEf78MH9nSOeiHLWWwfFSMkEntQpb2dKMKXVku5o59PJn0RDXbQA634YQz9Z9CtKGALm004EOzEcsy');
+        var elements = stripe.elements();
+
+        // Create an instance of the card Element
+        var card = elements.create('card');
+
+        // Add an instance of the card Element into the card-element div
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element
+        card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            stripe.createPaymentMethod({
+                type: 'card',
+                card: card
+            }).then(function(result) {
+                if (result.error) {
+                    // Display error message in your UI
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Send result.paymentMethod.id to your server
+                    console.log(result.paymentMethod.id);
+                    // Example: handlePaymentMethod(result.paymentMethod.id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
