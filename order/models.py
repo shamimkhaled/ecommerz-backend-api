@@ -9,7 +9,7 @@ from cart.serializers import CartSerializer
 
 
 class Shipping(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=250)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
     estimated_delivery_days = models.PositiveIntegerField()
 

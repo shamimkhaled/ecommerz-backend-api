@@ -29,7 +29,7 @@ class OrderSerializer(serializers.ModelSerializer):
     order_status = serializers.SerializerMethodField(read_only=True)
 
     cart = serializers.CharField()
-    shipping_cost = serializers.ChoiceField(choices=Shipping.objects.values_list('name', flat=True).distinct())  
+    shipping_cost = serializers.ChoiceField(choices=[])
     total_amount = serializers.SerializerMethodField()
     grand_total = serializers.SerializerMethodField()
     # grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
@@ -38,6 +38,11 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = ['order_id', 'user', 'cart', 'order_status', 'shipping_address', 'orderitems',  'total_amount',  'shipping_cost', 'grand_total', 'order_placed_at']
+
+
+    def __init__(self, *args, **kwargs):
+        super(OrderSerializer, self).__init__(*args, **kwargs)
+        self.fields['shipping_cost'].choices = Shipping.objects.values_list('name', flat=True).distinct()
 
 
     def get_user(self, obj):

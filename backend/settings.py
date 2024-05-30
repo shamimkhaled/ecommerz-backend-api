@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-09wwsxv2ge@een!jibwknjjesb2-g0b4(oahbk(=u=vsvq81*)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+# ALLOWED_HOSTS = ['192.168.0.237', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -42,8 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'cart',
-    'couponcode',
     'order',
+    'couponcode',
     'payment',
     'product_utils',
     
@@ -132,8 +134,15 @@ SPECTACULAR_SETTINGS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'verceldb',
+        'USER': 'default',
+        'PASSWORD': 'amQSGI37YXoN',
+        'HOST': 'ep-falling-grass-a4dgls65-pooler.us-east-1.aws.neon.tech',
+        'PORT': '5432',
     }
 }
 
