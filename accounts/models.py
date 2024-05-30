@@ -39,6 +39,8 @@ class UserAccountManager(BaseUserManager):
             is_active = True,
             is_staff = True,
             is_superadmin = True,
+            is_superuser = True,
+
         )
         
         #user.save(using = self._db)
@@ -52,6 +54,7 @@ class UserAccountManager(BaseUserManager):
 # for custom user model
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
+    # user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50, unique=True)
@@ -66,6 +69,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     is_superadmin = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserAccountManager()
 

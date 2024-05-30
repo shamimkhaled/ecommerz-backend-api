@@ -140,8 +140,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'verceldb',
         'USER': 'default',
-        'PASSWORD': 'amQSGI37YXoN',
-        'HOST': 'ep-falling-grass-a4dgls65-pooler.us-east-1.aws.neon.tech',
+        'PASSWORD': 'yrpSaBoY4L7n',
+        'HOST': 'ep-lively-lab-a4fkead9-pooler.us-east-1.aws.neon.tech',
         'PORT': '5432',
     }
 }
