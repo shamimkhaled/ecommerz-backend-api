@@ -10,7 +10,6 @@ from django.utils import timezone
 from rest_framework import status
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.response import Response
-from .custom_token import custom_password_reset_token
 
 
 model = get_user_model()
