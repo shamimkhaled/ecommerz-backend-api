@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+# from django.core.exceptions import ImproperlyConfigured
+# from social_auth.models import SocialAuth
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,13 +50,19 @@ INSTALLED_APPS = [
     'couponcode',
     'payment',
     'product_utils',
-    
+
     'rest_framework',
+
     'django_filters',
     'drf_yasg',
     'drf_spectacular',
+ 
+
 
 ]
+
+# SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,6 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+
 ]
 
 # CORS_ALLOWED_ORIGINS = []
@@ -201,3 +210,43 @@ SSL_COMMERZ_STORE_ID = 'enexu6654aa47bbcb8'
 SSL_COMMERZ_STORE_PASSWORD = 'enexu6654aa47bbcb8@ssl'
 SSL_COMMERZ_SANDBOX = True  # Set to False in production
 issandbox = True
+
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'i.amkhaled89@gmail.com'
+EMAIL_HOST_PASSWORD = 'zpobwqphhermnfks'
+# DEFAULT_FROM_EMAIL = 'your-email@example.com'
+
+
+
+
+
+
+# def get_social_providers():
+#     social_providers = {}
+
+#     try:
+#         social_apps = SocialAuth.objects.all()
+
+#         for app in social_apps:
+#             if app.provider not in social_providers:
+#                 social_providers[app.provider] = {
+#                     'APP': {
+#                         'client_id': app.client_id,
+#                         'secret': app.secret,
+#                         # 'key': ''
+#                     }
+#                 }
+#     except Exception as e:
+#         raise ImproperlyConfigured(f"Error loading social providers: {str(e)}")
+
+#     return social_providers
+
+# try:
+#     SOCIALACCOUNT_PROVIDERS = get_social_providers()
+# except ImproperlyConfigured:
+#     SOCIALACCOUNT_PROVIDERS = {}

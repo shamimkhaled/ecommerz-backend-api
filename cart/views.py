@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Carts, CartItem
 from accounts.models import UserAccount
-from .serializers import CartSerializer, CartItemSerializer, AddCartItemSerializer
+from .serializers import CartSerializer, CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -25,40 +25,39 @@ from accounts.token_authentication import CustomTokenAuthentication
 
 
 class CartListCreateAPIView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        user_token = request.COOKIES.get('access_token')
+    # def get(self, request):
+    #     user_token = request.COOKIES.get('access_token')
 
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+    #     if not user_token:
+    #         raise AuthenticationFailed('Unauthenticated user.')
 
-        payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+    #     payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+    #     model = get_user_model()
+    #     user = model.objects.filter(user_id=payload['user_id']).first()
         
-        carts = Carts.objects.filter(user=user)
-        serializer = CartSerializer(carts, many=True)
-        return Response(serializer.data)
+    #     carts = Carts.objects.filter(user=user)
+    #     serializer = CartSerializer(carts, many=True)
+    #     return Response(serializer.data)
 
     def post(self, request):
-        user_token = request.COOKIES.get('access_token')
+        user = self.request.user
 
-        if not user_token:
-            return Response({'error': 'Authentication required to create a cart'}, status=status.HTTP_401_UNAUTHORIZED)
+        # if not user:
+        #     raise AuthenticationFailed('Unauthenticated user.')
+        # try:
+        #     payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        # except jwt.InvalidTokenError:
+        #     return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
-        except jwt.InvalidTokenError:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+        # model = get_user_model()
+        # user = model.objects.filter(user_id=payload['user_id']).first()
         
         if not user:
             return Response({'error': 'User not found'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -76,29 +75,29 @@ class CartListCreateAPIView(APIView):
     
 
 class CartDetailAPIView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
-    def get_user_from_token(self, request):
-        user_token = request.COOKIES.get('access_token')
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+    # def get_user_from_token(self, request):
+    #     user_token = request.COOKIES.get('access_token')
+    #     if not user_token:
+    #         raise AuthenticationFailed('Unauthenticated user.')
 
-        try:
-            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired.')
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed('Invalid token.')
+    #     try:
+    #         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+    #     except jwt.ExpiredSignatureError:
+    #         raise AuthenticationFailed('Token has expired.')
+    #     except jwt.InvalidTokenError:
+    #         raise AuthenticationFailed('Invalid token.')
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+    #     model = get_user_model()
+    #     user = model.objects.filter(user_id=payload['user_id']).first()
         
-        if not user:
-            raise AuthenticationFailed('User not found.')
+    #     if not user:
+    #         raise AuthenticationFailed('User not found.')
 
-        return user
+    #     return user
 
     def get_object(self, pk, user):
         try:
@@ -107,7 +106,7 @@ class CartDetailAPIView(APIView):
             return None
 
     def get(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart = self.get_object(pk, user)
         if not cart:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -115,7 +114,7 @@ class CartDetailAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart = self.get_object(pk, user)
         if not cart:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -128,38 +127,38 @@ class CartDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart = self.get_object(pk, user)
         if not cart:
             return Response(status=status.HTTP_404_NOT_FOUND)
         cart.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Cart deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
 class CartItemListCreateAPIView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    authentication_classes = [CustomTokenAuthentication]
+    permission_classes = [IsAuthenticated,]
 
-    def get_user_from_token(self, request):
-        user_token = request.COOKIES.get('access_token')
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+    # def get_user_from_token(self, request):
+    #     user_token = request.COOKIES.get('access_token')
+    #     if not user_token:
+    #         raise AuthenticationFailed('Unauthenticated user.')
 
-        try:
-            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired.')
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed('Invalid token.')
+    #     try:
+    #         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+    #     except jwt.ExpiredSignatureError:
+    #         raise AuthenticationFailed('Token has expired.')
+    #     except jwt.InvalidTokenError:
+    #         raise AuthenticationFailed('Invalid token.')
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+    #     model = get_user_model()
+    #     user = model.objects.filter(user_id=payload['user_id']).first()
         
-        if not user:
-            raise AuthenticationFailed('User not found.')
+    #     if not user:
+    #         raise AuthenticationFailed('User not found.')
 
-        return user
+    #     return user
     
 
     def get_queryset(self):
@@ -168,16 +167,27 @@ class CartItemListCreateAPIView(APIView):
     def get_serializer_class(self):
         if self.request.method == "POST":
             return AddCartItemSerializer
+        
+        elif self.request.method == 'PATCH':
+            return UpdateCartItemSerializer
         return CartItemSerializer
     
     def get_serializer_context(self, cart_id):
         return {"cart_id": cart_id}
+    
+    def get_object(self, pk, user):
+        try:
+            return CartItem.objects.get(id=pk, cart__user=user)
+        except CartItem.DoesNotExist:
+            return None
 
     def get(self, request):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart_items = CartItem.objects.filter(cart__user=user)
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
+    
+   
 
     def post(self, request):
         # user = self.get_user_from_token(request)
@@ -198,7 +208,7 @@ class CartItemListCreateAPIView(APIView):
         #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart_id = request.data.get('cart')
         if not cart_id:
             return Response({'error': 'Cart ID is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -213,35 +223,47 @@ class CartItemListCreateAPIView(APIView):
         serializer = serializer_class(data=data, context=serializer_context)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Cart item Added successfully'}, serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # def put(self, request, pk):
+    #     user = self.request.user
+    #     cart_item = self.get_object(pk, user)
+    #     if not cart_item:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
+    #     data = request.data.copy()
+    #     data['cart'] = str(cart_item.cart.cart_id)
+    #     serializer = CartItemSerializer(cart_item, data=data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response({'message': 'Cart item updated successfully'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 class CartItemDetailAPIView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    authentication_classes = [CustomTokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get_user_from_token(self, request):
-        user_token = request.COOKIES.get('access_token')
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+    # def get_user_from_token(self, request):
+    #     user_token = request.COOKIES.get('access_token')
+    #     if not user_token:
+    #         raise AuthenticationFailed('Unauthenticated user.')
 
-        try:
-            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired.')
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed('Invalid token.')
+    #     try:
+    #         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+    #     except jwt.ExpiredSignatureError:
+    #         raise AuthenticationFailed('Token has expired.')
+    #     except jwt.InvalidTokenError:
+    #         raise AuthenticationFailed('Invalid token.')
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+    #     model = get_user_model()
+    #     user = model.objects.filter(user_id=payload['user_id']).first()
         
-        if not user:
-            raise AuthenticationFailed('User not found.')
+    #     if not user:
+    #         raise AuthenticationFailed('User not found.')
 
-        return user
+    #     return user
 
     def get_object(self, pk, user):
         try:
@@ -250,7 +272,7 @@ class CartItemDetailAPIView(APIView):
             return None
 
     def get(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart_item = self.get_object(pk, user)
         if not cart_item:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -258,7 +280,7 @@ class CartItemDetailAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart_item = self.get_object(pk, user)
         if not cart_item:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -268,15 +290,15 @@ class CartItemDetailAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Cart item updated successfully'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         cart_item = self.get_object(pk, user)
         if not cart_item:
             return Response(status=status.HTTP_404_NOT_FOUND)
         cart_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Cart item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -348,32 +370,32 @@ class CartItemDetailAPIView(APIView):
 
 
 class ApplyCouponCodeView(generics.GenericAPIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    authentication_classes = [CustomTokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ApplyCouponSerializers
 
-    def get_user_from_token(self, request):
-        user_token = request.COOKIES.get('access_token')
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+    # def get_user_from_token(self, request):
+    #     user_token = request.COOKIES.get('access_token')
+    #     if not user_token:
+    #         raise AuthenticationFailed('Unauthenticated user.')
 
-        try:
-            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired.')
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed('Invalid token.')
+    #     try:
+    #         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
+    #     except jwt.ExpiredSignatureError:
+    #         raise AuthenticationFailed('Token has expired.')
+    #     except jwt.InvalidTokenError:
+    #         raise AuthenticationFailed('Invalid token.')
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
+    #     model = get_user_model()
+    #     user = model.objects.filter(user_id=payload['user_id']).first()
 
-        if not user:
-            raise AuthenticationFailed('User not found.')
+    #     if not user:
+    #         raise AuthenticationFailed('User not found.')
 
-        return user
+    #     return user
 
     def post(self, request, cart_id):
-        user = self.get_user_from_token(request)
+        user = self.request.user
         serializer = self.get_serializer(data=request.data)
         
         if serializer.is_valid():

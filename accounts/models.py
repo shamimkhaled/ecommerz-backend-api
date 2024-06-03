@@ -48,7 +48,7 @@ class UserAccountManager(BaseUserManager):
        
        
         
-
+ 
 
 # ========================UserAccount===============================
 # for custom user model
@@ -108,10 +108,14 @@ class UserProfile(models.Model):
 
     date_joined = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
     def save(self, *args, **kwargs):
+        user_first_name = self.user.first_name
+        user_last_name = self.user.last_name
+
         user_email = self.user.email
         split_username = user_email.index('@')
         get_username = user_email[:split_username]
@@ -121,7 +125,13 @@ class UserProfile(models.Model):
     @receiver(post_save, sender=UserAccount)
     def create_profile(sender, instance, created, **kwargs):
         if created:
-            UserProfile.objects.create(user=instance)
+            UserProfile.objects.create(
+                user=instance,
+                first_name=instance.first_name,
+                last_name=instance.last_name
+                
+                
+                )
 
 
     @receiver(post_save, sender=UserAccount)
