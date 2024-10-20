@@ -35,18 +35,10 @@ import jwt
 
 
 
-
-
-# Create your views here.
-# class UserAccountViewSet(viewsets.ModelViewSet):
-#     queryset = UserAccount.objects.all()
-#     serializer_class = UserAccountSerializer
-
-
 # ========================UserRegisterationAPIView===============================
 class UserRegisterationAPIView(APIView):
     serializer_class = UserRegisterationSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (CustomTokenAuthentication,)
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -69,7 +61,7 @@ class UserRegisterationAPIView(APIView):
 # ========================UserLoginAPIView===============================
 class UserLoginAPIView(APIView):
     serializer_class = UserLoginSerializer
-    # authentication_classes = (TokenAuthentication,)
+    authentication_classes = (CustomTokenAuthentication,)
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -104,7 +96,7 @@ class UserLoginAPIView(APIView):
 
 # ========================UserLogoutAPIView===============================
 class UserLogoutAPIView(APIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (CustomTokenAuthentication,)
     permission_classes = (AllowAny,)
 
     def get(self, request):
@@ -146,58 +138,52 @@ class UserAPIView(APIView):
 # ========================UserProfileAPIView===============================
 class UserProfileAPIView(APIView):
 
-
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (AllowAny,)
-
-    # def get_object(self, username):
-    #     try:
-    #         username = self.kwargs['username']
-    #         return UserProfile.objects.get(user__username=username)
-    #     except UserProfile.DoesNotExist:
-    #         raise Http404
-
-    # def get(self, request, username):
-    #     user_token = request.COOKIES.get('access_token')
-
-    #     if not user_token:
-    #         raise AuthenticationFailed('Unauthenticated user.')
-
-    #     payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
-
-    #     model = get_user_model()
-    #     user = model.objects.filter(user_id=payload['user_id']).first()
-    #     if user.username != username:
-    #         raise AuthenticationFailed('User is not authorized to access this profile.')
-
-    #     profile = self.get_object(username)
-    #     serializer_class = UserProfileSerializer(profile)
-    #     return Response(serializer_class.data)
-    
-
     authentication_classes = (CustomTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        user_token = request.COOKIES.get('access_token')
+        user = self.request.user
 
-        if not user_token:
-            raise AuthenticationFailed('Unauthenticated user.')
+        if not user:
+            raise AuthenticationFailed('User not Found.')
 
-        payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=['HS256'])
 
-        model = get_user_model()
-        user = model.objects.filter(user_id=payload['user_id']).first()
         profile = user.userprofile
         serializer_class = UserProfileSerializer(profile)
         return Response(serializer_class.data)
-   
+    
+    
+class UpdateUserProfileAPIView(generics.UpdateAPIView):
+    authentication_classes = (CustomTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        user = self.request.user
+        if not user:
+            raise AuthenticationFailed('User not found.')
+        return user.userprofile
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response({
+                'message': 'Profile updated successfully.',
+                'data': serializer.data
+            })
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 # ========================PasswordResetView===============================
 
 class PasswordResetRequestView(generics.GenericAPIView):
     serializer_class = PasswordResetRequestSerializer
-
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -225,14 +211,15 @@ class PasswordResetRequestView(generics.GenericAPIView):
 
         Thanks for using our site!
         """
-        # send_mail(subject, message, None, [user.email])
-        # {'message': 'Password reset link are already sent in email'},
+        send_mail(subject, message, None, [user.email])
+        msg = {'message': 'Password reset link are already sent in email'},
         
-        return Response( {'reset_url': reset_url}, status=status.HTTP_200_OK)
+        return Response( {'reset_url': reset_url, 'message': msg}, status=status.HTTP_200_OK)
 
 
 class PasswordResetConfirmView(generics.GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, uidb64, token, *args, **kwargs):
         try:

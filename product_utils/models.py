@@ -17,7 +17,9 @@ class Review(models.Model):
 
     def __str__(self):
          return f'Review for {self.product.product_title} by {self.user.username}'
+    
 
+# =================================Wishlist========================
 class Wishlist(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='wishlist')
     products = models.ManyToManyField(Products, related_name='wishlists')
@@ -30,3 +32,12 @@ class Wishlist(models.Model):
     #     if not self.slug:
     #         self.slug = slugify(self.products.product_title)
     #     return super().save(*args, **kwargs)
+
+
+# ===================================Compare=====================
+class Compare(models.Model):
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='compare')
+    products = models.ManyToManyField(Products, related_name='compares')
+    
+    def __str__(self):
+        return f'Comparison list of {self.user.username}'

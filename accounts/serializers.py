@@ -69,6 +69,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             }
 
 
+# ========================UserAccountSerializer===============================
 class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
@@ -78,7 +79,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
 
 
 
-
+# ========================PasswordResetRequestSerializer===============================
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
@@ -87,7 +88,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError('No user is associated with this email address.')
         return value
     
-
+# ========================PasswordResetConfirmSerializer===============================
 class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True, min_length=8)
     confirm_password = serializers.CharField(write_only=True, min_length=8)

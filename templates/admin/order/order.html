@@ -1,0 +1,178 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title"> All Orders</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Order</li>
+                    </ul>
+                </div>
+                <div class="col-auto">
+                    <a href="{% url 'dashboard:create_order' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Order
+                    </a>
+                    <a class="btn btn-primary filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+   
+        <!-- Search Filter -->
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                        <label>Category Title:</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Status:</label>
+                            <select class="select">
+                                <option>Select Status</option>
+                                <option>Draft</option>
+                                <option>Sent</option>
+                                <option>Viewed</option>
+                                <option>Expired</option>
+                                <option>Accepted</option>
+                                <option>Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>From</label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>To</label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Category Title</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Search Filter -->
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table"> 
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-stripped table-hover datatable">
+                                <thead class="thead-light">
+                                    <tr>
+                                       <th>Record No</th>
+                                       <th>Order Id</th>
+                                       <th>User</th>
+                                       <th>Cart</th>
+                                       <th>Order Status</th>
+                                       <th>Total Amount</th>
+                                       <th>Shipping Cost</th>
+                                       <th>Grand Total</th>
+                                       <th>Shipping Adress</th>
+                                       <th>Order Placed At</th>
+                                       <th>Updated At</th>
+                                       
+                                       <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    <tr>
+                                        {% for order in orders %}
+
+                                        <td><a href="">{{forloop.counter}}</a></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <!-- <img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="{% static 'assets/img/profiles/avatar-04.jpg' %}" alt="User Image"> -->
+                                                <a href=""> {{order.order_id}} </a>
+                                            </h2>
+                                        </td>
+                                        <td>{{order.user}}</td>
+                                        <td>{{order.cart}}</td>
+                                        <td>
+                                            
+                                            <span class="badge badge-pill 
+                                           {% if order.order_status == 'Pending' %}
+                                                bg-primary-light
+                                            {% elif order.order_status == 'Processing' or order.order_status == 'Shipped' %}
+                                                bg-warning-light
+                                            {% elif order.order_status == 'Delivered' %}
+                                                bg-success-light
+                                            {% elif order.order_status == 'Cancelled' %}
+                                                bg-danger-light
+                                            {% else %}
+                                                bg-secondary-light
+                                            {% endif %}
+                                                                                    
+                                            ">
+                                                {{order.order_status}}
+                                            </span>
+                                        
+                                        </td>
+
+                                        <td>{{order.total_amount}}</td>
+                                        <td>{{order.shipping_cost}}</td>
+                                        <td>{{order.grand_total}}</td>
+                                        <td>{{order.shipping_address}}</td>
+
+                                        <td>{{order.order_placed_at}}</td>
+                                        <td>{{order.updated_at}}</td>
+
+
+
+                                        <td class="text-end">
+                                           
+                                            <a href="{% url 'dashboard:update_order' order.order_id %}" class="btn btn-sm btn-white text-success me-2"><i class="far fa-edit me-1"></i> Edit</a> 
+                                            <a href="{% url 'dashboard:delete_order' order.order_id %}" class="btn btn-sm btn-white text-danger me-2"><i class="far fa-trash-alt me-1"></i>Delete</a>
+                                                   
+                                               
+                                        </td>
+                                    </tr>
+
+
+                                    {% endfor %}
+
+                                  </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+
+
+{% endblock %}

@@ -223,7 +223,7 @@ class CartItemListCreateAPIView(APIView):
         serializer = serializer_class(data=data, context=serializer_context)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Cart item Added successfully'}, serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Cart item Added successfully', 'data':serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def put(self, request, pk):

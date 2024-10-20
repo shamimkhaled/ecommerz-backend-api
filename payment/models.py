@@ -29,7 +29,8 @@ class Payment(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.order.order_id} - {self.payment_status}"
+        # return f"{self.user.username} - {self.order.order_id} - {self.payment_status}"
+        return f"{self.transaction_id} - {self.payment_status} - {self.user.username}  "
 
 
 

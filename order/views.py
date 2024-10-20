@@ -167,8 +167,7 @@ from cart.models import Carts, CartItem
 from cart.serializers import *
 from .serializers import OrderSerializer, OrderItemSerializer
 from django.contrib.auth import get_user_model
-from rest_framework.authentication import TokenAuthentication
-from .token_authentication import CustomTokenAuthentication
+from accounts.token_authentication import CustomTokenAuthentication
 
 
 
@@ -248,7 +247,7 @@ class OrderViewSet(generics.CreateAPIView):
             order_item_data = {
                 'order': order.order_id,
                 'product': cart_item.product.product_id,
-                'product_variation': cart_item.product_variation,
+                'product_variation': cart_item.product_variation.variation_id,
                 'quantity': cart_item.quantity,
                 'price': cart_item.sub_total()
             }

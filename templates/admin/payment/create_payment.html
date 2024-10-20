@@ -1,0 +1,96 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+            
+            
+            <!-- Page Wrapper -->
+			<div class="page-wrapper">
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title"> Create Payment</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:payment' %}"> Payment</a></li>
+									<li class="breadcrumb-item active">Create Payment</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Payment Info</h4>
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="user">User</label>
+													{{form.user}}
+												</div>
+
+												<div class="form-group">
+													<label for="order">Order</label>
+													{{form.order}}
+												</div>
+												<div class="form-group">
+													<label for="transaction_id">Transaction</label>
+													{{form.transaction_id}}
+												</div>
+
+												
+
+                
+                                                
+
+                                              
+
+                                               
+                                               
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+                                                    <label for="payment_status">Payment Status</label>
+													{{form.payment_status}}
+                             
+
+												</div>
+												<div class="form-group">
+                                                    <label for="amount">Amount</label>
+													{{form.amount}}
+                             
+
+												</div>
+                                                
+                                                
+											
+											</div>
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary">Create Payment</button>
+                                            </div>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+
+{% endblock %}

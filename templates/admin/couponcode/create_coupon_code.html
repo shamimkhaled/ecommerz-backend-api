@@ -1,0 +1,96 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+            
+            
+            <!-- Page Wrapper -->
+			<div class="page-wrapper">
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Create Coupon Code</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:coupon_code' %}">Coupon Coude</a></li>
+									<li class="breadcrumb-item active">Create Coupon Code</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Coupon Code Info</h4>
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="code">Coupon Code</label>
+													{{form.code}}
+												</div>
+
+												<div class="form-group">
+													<label for="discount">Discount</label>
+													{{form.discount}}
+												</div>
+
+												<div class="form-group">
+													{{form.active}}
+                                                    <label for="active">Is Active</label>
+
+												</div>
+                                                
+
+                                              
+
+                                               
+                                               
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="valid_from">Valid From</label>
+                                                    {{ form.valid_from }}
+													
+
+												</div>
+												<div class="form-group">
+													<label for="valid_to">Valid To</label>
+                                                    {{ form.valid_to }}
+													
+
+												</div>
+
+
+                                                
+                                                
+											
+											</div>
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary">Create Coupon Code</button>
+                                            </div>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+
+{% endblock %}

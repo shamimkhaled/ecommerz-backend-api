@@ -1,0 +1,77 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+            
+            
+            <!-- Page Wrapper -->
+			<div class="page-wrapper">
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Add Variation Category</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:variation_categories' %}">Variation Category</a></li>
+									<li class="breadcrumb-item active">Add Variation Category</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Variation Category Info</h4>
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label> Variation Category Title</label>
+													{{form.variation_category_title}}
+												</div>
+                                               
+                                               
+												
+												
+
+                                              
+
+                                               
+                                               
+											</div>
+											{% comment %} <div class="col-md-6">
+												
+                                                <div class="form-group">
+													<label>Product Image</label>
+													{{form.category_image}}
+												</div>
+											
+											</div> {% endcomment %}
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary">Add Variation Category</button>
+                                            </div>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+
+{% endblock %}

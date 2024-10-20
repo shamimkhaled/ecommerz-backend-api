@@ -9,10 +9,12 @@ from rest_framework import routers
 # router.register("products", views.ProductsViewSet)
 # router.register("categories", views.CategoryViewSet)
 
+app_name = 'store'  
+
 
 urlpatterns = [
     # path('product', ProductListView.as_view()),
-    path('products/', ProductsAPIView.as_view()),
+    path('products/', ProductsAPIView.as_view(), name="products"),
 
     path('products/<slug:slug>', SingleProductAPIView.as_view()),
     # path('products/<str:pk>', SingleProductAPIView.as_view()),

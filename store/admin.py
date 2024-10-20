@@ -17,6 +17,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductImagesAdmin(admin.StackedInline):
     model = ProductImages
+    extra = 1
 
 
 

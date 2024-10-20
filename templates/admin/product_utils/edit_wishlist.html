@@ -1,0 +1,83 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+            
+            
+            <!-- Page Wrapper -->
+			<div class="page-wrapper">
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title"> Update Wishlist</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:wishlist' %}"> Wishlist</a></li>
+									<li class="breadcrumb-item active">Update Wishlist</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Wishlist Info</h4>
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="user">User</label>
+													{{form.user}}
+												</div>
+
+												
+												
+
+												
+
+                
+                                                
+
+                                              
+
+                                               
+                                               
+											</div>
+											<div class="col-md-6">
+              
+	
+                                                <div class="form-group">
+													<label for="products">Products</label>
+													{{form.products}}
+												</div>
+                                                
+											
+											</div>
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary">Update Wishlist</button>
+                                            </div>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+
+{% endblock %}

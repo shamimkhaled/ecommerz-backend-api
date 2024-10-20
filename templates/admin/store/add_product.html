@@ -1,0 +1,121 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+            
+            
+            <!-- Page Wrapper -->
+			<div class="page-wrapper">
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Add Product</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'dashboard:product' %}">Product</a></li>
+									<li class="breadcrumb-item active">Add Product</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Product Info</h4>
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Product Title</label>
+													{{form.product_title}}
+												</div>
+                                                <div class="form-group">
+													<label>Product Image</label>
+													{{form.image}}
+												</div>
+												<div class="form-group">
+													<label for="short_description">Short Description</label>
+													<!-- <input type="email" class="form-control"> -->
+                                                     {{form.short_description}}
+												</div>
+												<div class="form-group">
+                                                        <label for="description">Description</label>
+                                                        {{form.description}}
+												</div>
+
+                                                <div class="form-group">
+                                                    
+                                                    {{form.is_available}}
+                                                    <label for="is_available">Available</label>
+                                                </div>
+
+                                               
+                                               
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="category">Category</label>
+                                                    {{ form.category }}
+													
+
+												</div>
+												<div class="form-group">
+													<label for="stock">Stock</label>
+													{{form.stock}}
+												</div>
+												<div class="form-group">
+													<label for="price">Price</label>
+													{{form.price}}
+												</div>
+
+                                                <div class="form-group">
+													<label for="old_price">Old Price</label>
+													{{form.old_price}}
+												</div>
+
+                                                <div class="form-group">
+                                                    
+                                                    {{form.is_out_of_stock}}
+                                                    <label for="is_out_of_stock">Is Out of Stock</label>
+                                                </div>
+
+                                                <div class="form-group">
+													
+													{{form.top_deal}}
+                                                    <label for="top_deal">Top Deal</label>
+												</div>
+
+                                                <div class="form-group">
+													
+													{{form.flash_sales}}
+                                                    <label for="flash_sales">Flash Sales</label>
+												</div>
+											</div>
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary">Add Product</button>
+                                            </div>
+
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+
+{% endblock %}

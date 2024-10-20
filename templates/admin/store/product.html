@@ -1,0 +1,147 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+
+
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+    
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Products</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">Product</li>
+                    </ul>
+                </div>
+                <div class="col-auto">
+                    <a href="{% url 'dashboard:add_product' %}" class="btn btn-primary me-1">
+                        <i class="fas fa-plus"></i> Add Product
+                    </a>
+                    <a class="btn btn-primary filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+            
+        <!-- Search Filter -->
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group">
+                            <label>Product Title</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group">
+                            <label>Stock</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Search Filter -->
+        
+        <div class="row">
+            <div class="col-sm-12">
+                
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-center table-hover datatable">
+                                <thead class="thead-light">
+
+
+                                    <tr>
+                                        <th>Record No.</th>
+                                        <th>Product Title</th>
+                                        <th>Category</th>
+                                        <th>Stock</th>
+                                        <th>Price</th>
+                                        <th>Old Price</th>
+                                        <th>Status</th>
+                                        <th>Out of Stock</th>
+                                        <th>Created At</th>
+
+
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+
+
+                                </thead>
+                                <tbody>
+
+
+                                    {% for product in products %}
+
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <!-- <a href="profile.html" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="User Image"></a> -->
+                                                <a href="{% url 'dashboard:edit_product' product.slug %}">{{product.product_title}} <span>{{product.product_id}}</span></a>
+                                            </h2>
+                                        </td>
+                                        <td>{{product.category}}</td>
+                                        <td>{{product.stock}}</td>
+                                        <td>{{product.price}}</td>
+                                        <td>{{product.old_price}}</td>
+
+
+                                        <td>
+                                            <span class="badge badge-pill {% if product.is_available %}bg-success-light{% else %}bg-danger-light{% endif %}">
+                                                {% if product.is_available %} Available {% else %} Unavailable {% endif %}                                       
+                                             </span>
+                                        
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill {% if product.is_out_of_stock %}bg-danger-light{% else %}bg-success-light{% endif %}">
+                                                {% if product.is_out_of_stock %} Out of Stock {% else %} In Stock {% endif %}                                       
+                                             </span>
+
+                                        
+                                        </td>
+                                        <td>{{product.created_at}}</td>
+
+                                        <td class="text-right">
+                                            <a href="{% url 'dashboard:edit_product' product.slug %}" class="btn btn-sm btn-white text-success me-2"><i class="far fa-edit me-1"></i> Edit</a> 
+                                            <a href="{% url 'dashboard:delete_product' product.slug %}" class="btn btn-sm btn-white text-danger me-2"><i class="far fa-trash-alt me-1"></i>Delete</a>
+                                        </td>
+                                    </tr>
+                                    
+
+                                    {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+
+
+{% endblock %}

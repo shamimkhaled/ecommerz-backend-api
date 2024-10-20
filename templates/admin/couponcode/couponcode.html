@@ -1,0 +1,152 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Coupon Code</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Coupon Code</li>
+                    </ul>
+                </div>
+                <div class="col-auto">
+                    <a href="{% url 'dashboard:create_coupon_code' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Coupon Code
+                    </a>
+                    <a class="btn btn-primary filter-btn" href="javascript:void(0);" id="filter_search">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+   
+        <!-- Search Filter -->
+        <div id="filter_inputs" class="card filter-card">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                        <label>Category Title:</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Status:</label>
+                            <select class="select">
+                                <option>Select Status</option>
+                                <option>Draft</option>
+                                <option>Sent</option>
+                                <option>Viewed</option>
+                                <option>Expired</option>
+                                <option>Accepted</option>
+                                <option>Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>From</label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>To</label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Category Title</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Search Filter -->
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table"> 
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-stripped table-hover datatable">
+                                <thead class="thead-light">
+                                    <tr>
+                                       <th>Record No</th>
+                                       <th>Coupon Code</th>
+                                       <th>Discount</th>
+                                       <th>Valid From</th>
+                                       <th>Valid To</th>
+                                       <th>Active</th>
+                                       
+                                       <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    <tr>
+                                        {% for coupon in coupon_code %}
+
+                                        <td><a href="">{{forloop.counter}}</a></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <!-- <img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="{% static 'assets/img/profiles/avatar-04.jpg' %}" alt="User Image"> -->
+                                                <a href=""> {{coupon.code}} </a>
+                                            </h2>
+                                        </td>
+                                        <td>{{coupon.discount}}</td>
+                                        <td>{{coupon.valid_from}}</td>
+                                        <td>{{coupon.valid_to}}</td>
+                                        <td>
+                                            
+                                            <span class="badge badge-pill {% if coupon.active %}bg-success-light{% else %}bg-danger-light{% endif %}">
+                                                {% if coupon.active %} Active {% else %} Inactive {% endif %}                                       
+                                             </span>
+                                        
+                                        </td>
+
+
+                                        <td class="text-end">
+                                           
+                                            <a href="{% url 'dashboard:update_coupon_code' coupon.id %}" class="btn btn-sm btn-white text-success me-2"><i class="far fa-edit me-1"></i> Edit</a> 
+                                            <a href="{% url 'dashboard:delete_coupon_code' coupon.id %}" class="btn btn-sm btn-white text-danger me-2"><i class="far fa-trash-alt me-1"></i>Delete</a>
+                                                   
+                                               
+                                        </td>
+                                    </tr>
+
+
+                                    {% endfor %}
+
+                                  </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+
+
+{% endblock %}

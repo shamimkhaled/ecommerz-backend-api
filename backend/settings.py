@@ -19,6 +19,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
     'couponcode',
     'payment',
     'product_utils',
+    'refund',
+    'dashboard',
 
     'rest_framework',
 
@@ -108,20 +111,14 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 2, # Adjust the page size as needed
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.TokenAuthentication',
-    # ],
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-
+    
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'rest_framework.authentication.TokenAuthentication',
     #     'rest_framework.authentication.SessionAuthentication',
     # ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 
     # 'EXCEPTION_HANDLER': 'accounts.token_expired_exception_handler.custom_exception_handler',
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -190,7 +187,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+
+# Additional locations of static files
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Directory where static files will be collected
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_RUL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# settings.py
+
+# URL to use when referring to media files
+# MEDIA_URL = '/media/'
+
+# # Directory where media files will be stored
+# MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

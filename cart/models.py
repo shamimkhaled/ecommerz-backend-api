@@ -14,7 +14,7 @@ class Carts(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Cart #{self.cart_id} - {self.user.username}"
+        return f"{self.cart_id}"
     
     # def get_total_price(self, cart):
     #     total = sum(item.sub_total() for item in cart.cartitems.all())
